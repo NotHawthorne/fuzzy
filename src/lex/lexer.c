@@ -2,31 +2,32 @@
 
 e_lexeme	fuzzy_lexer_singletons(char data)
 {
-	static int	arr[127];
-
-	arr['%'] = DATATYPE;
-	arr['{'] = OPENCURLY;
-	arr['}'] = CLOSECURLY;
-	arr['('] = OPENPAR;
-	arr[')'] = CLOSEPAR;
-	arr['+'] = PLUS;
-	arr['-'] = MINUS;
-	arr['*'] = MULT;
-	arr['/'] = DIV;
-	arr['$'] = DOLLAR;
-	arr['>'] = GREAT;
-	arr['<'] = LESS;
-	arr['!'] = EXCL;
-	arr['\"'] = QUOTE;
-	arr['\''] = LITQUOTE;
-	arr[';'] = SEMI;
-	arr['='] = EQUALS;
-	arr[' '] = WHITESPACE;
-	arr['\t'] = WHITESPACE;
-	arr['\n'] = WHITESPACE;
-	arr['\v'] = WHITESPACE;
-	arr['\r'] = WHITESPACE;
-	arr['\f'] = WHITESPACE;
+	static int	arr[127] = {
+		['%'] = DATATYPE,
+		['{'] = OPENCURLY,
+		['}'] = CLOSECURLY,
+		['('] = OPENPAR,
+		[')'] = CLOSEPAR,
+		['+'] = PLUS,
+		['-'] = MINUS,
+		['*'] = MULT,
+		['/'] = DIV,
+		['$'] = DOLLAR,
+		['>'] = GREAT,
+		['<'] = LESS,
+		['!'] = EXCL,
+		['\"'] = QUOTE,
+		['\''] = LITQUOTE,
+		[';'] = SEMI,
+		['='] = EQUALS,
+		[' '] = WHITESPACE,
+		['\t'] = WHITESPACE,
+		['\n'] = WHITESPACE,
+		['\v'] = WHITESPACE,
+		['\r'] = WHITESPACE,
+		['\f'] = WHITESPACE,
+	};
+	
 	return ((e_lexeme)arr[(int)data]);
 }
 

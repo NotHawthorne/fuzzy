@@ -41,6 +41,28 @@ typedef enum
 	ARG_REF
 } e_lexeme;
 
+/*
+** EXPR			:=	ARG | ARG, ARG
+** ARG			:=	TYPE | TYPE, CONSTR | TYPE, EQ
+** TYPE			:=	"%s" | "%da" | "%c" | "%d"
+** CONSTR		:=	BLOCK_START, CMP, BLOCK_END
+** NOT			:=	"!"
+** CMP			:=	CMP_OP, VAR | CMP_OP, ARG_NO |
+**					NOT, CMP_OP, VAR | NOT, CMP_OP, ARG_NO |
+**					CMP_OP, VAR, SEP, CMP | CMP_OP, ARG_NO, SEP, CMP |
+**					NOT, CMP_OP, VAR, SEP, CMP | NOT, CMP_OP, ARG_NO, SEP, CMP
+** VAR			:=	NUMBER | STR
+** NUMBER		:=	0-9 | 0-9, NUMBER
+** STR			:=	string (\0 terminated char array)
+** CMP_OP		:=	">" | "<" | ">=" | "<=" | "==" | "%%"
+** ARG_NO		:=	"$", NUMBER
+** MATH_OP		:=	"+" | "-" | "*" | "/"
+** EQUALITY		:=	"="
+** BLOCK_START	:=	"{" | "("
+** BLOCK_END	:= 	"}" | ")"
+** SEP			:=	";"
+*/
+
 typedef enum
 {
 	EXPR,
@@ -58,6 +80,7 @@ typedef enum
 	BLOCK_START,
 	BLOCK_END,
 	SEP,
+	MATH_OP,
 	EMPTY
 } e_ast_node;
 
@@ -85,5 +108,7 @@ void		*fuzz(void (*f)(void), const char *fmt, ...);
 t_lexeme	*fuzzy_lexer(char *format);
 void		print_enum_type(t_lexeme *lexeme);
 t_ast_node	*fuzzy_parser(t_lexeme *lex);
+void		fuzzy_ast_insert(t_ast_node **head, e_ast_node type, t_lexeme *lex);
+void		fuzzy_ast_print(t_ast_node *head);
 
 #endif

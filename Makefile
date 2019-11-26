@@ -6,7 +6,7 @@ all: $(NAME)
 MODULES := src/lex src/fuzz includes
 LIBDIRS :=
 LIBS :=
-CFLAGS += -Iincludes -Wall -Werror -Wextra
+CFLAGS += -Iincludes -Wall -Werror -Wextra -g -fsanitize=address
 MODNAME := module.mk
 SRC :=
 
