@@ -9,8 +9,9 @@
 # include <string.h>
 # include <stdarg.h>
 
-enum	e_lexme
+typedef enum
 {
+	NONE,
 	PERCENT,
 	DATATYPE,
 	OPENCURLY,
@@ -30,8 +31,9 @@ enum	e_lexme
 	LESS,
 	GREATEQ,
 	LESSEQ,
-	QUOTE
-};
+	QUOTE,
+	LITQUOTE
+} e_lexeme;
 
 enum	e_ast_node
 {
@@ -48,6 +50,18 @@ enum	e_ast_node
 	ARG_NO
 };
 
-void	*fuzz(void (*f)(void), const char *fmt, ...);
+typedef struct	s_lexeme	t_lexeme;
+
+struct s_lexeme
+{
+	char			*data;
+	int				len;
+	e_lexeme		type;
+	struct s_lexeme	*next;
+};
+
+void		*fuzz(void (*f)(void), const char *fmt, ...);
+t_lexeme	*fuzzy_lexer(char *format);
+void		print_enum_type(t_lexeme *lexeme);
 
 #endif
