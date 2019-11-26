@@ -32,7 +32,11 @@ typedef enum
 	GREATEQ,
 	LESSEQ,
 	QUOTE,
-	LITQUOTE
+	LITQUOTE,
+	SEMI,
+	EQUALS,
+	WHITESPACE,
+	ARG_REF
 } e_lexeme;
 
 enum	e_ast_node

@@ -19,6 +19,14 @@ e_lexeme	fuzzy_lexer_singletons(char data)
 	arr['!'] = EXCL;
 	arr['\"'] = QUOTE;
 	arr['\''] = LITQUOTE;
+	arr[';'] = SEMI;
+	arr['='] = EQUALS;
+	arr[' '] = WHITESPACE;
+	arr['\t'] = WHITESPACE;
+	arr['\n'] = WHITESPACE;
+	arr['\v'] = WHITESPACE;
+	arr['\r'] = WHITESPACE;
+	arr['\f'] = WHITESPACE;
 	return ((e_lexeme)arr[(int)data]);
 }
 
@@ -47,8 +55,10 @@ static int		fuzzy_find_eos(char *str)
 	i = 0;
 	while (*(str + i))
 	{
+		if (*(str + i) >= '0' && *(str + i) <= 9)
+			return (i);
 		if ((*(str + i) >= 'A' && *(str + i) <= 'Z') ||
-			(*(str + i) >= 'a' && *(str +i ) <= 'z'))
+			(*(str + i) >= 'a' && *(str + i) <= 'z'))
 			i++;
 		else
 			return (i);
@@ -131,14 +141,32 @@ void			print_enum_type(t_lexeme *lexeme)
 		printf("QUOTE");
 	else if (lexeme->type == LITQUOTE)
 		printf("LITQUOTE");
+	else if (lexeme->type == SEMI)
+		printf("SEMI");
+	else if (lexeme->type == EQUALS)
+		printf("EQUALS");
+	else if (lexeme->type == WHITESPACE)
+		printf("WHITESPACE");
+	else if (lexeme->type == ARG_REF)
+		printf("ARG_REF");
 	else
 		printf("ERR");
+}
+
+int				fuzzy_find_eon(char *data)
+{
+	int	i;
+
+	i = 0;
+	while (*(data + i) >= '0' && *(data + i) <= '9')
+		i++;
+	return (i);
 }
 
 t_lexeme		*fuzzy_lexer(char *format)
 {
 	t_lexeme		*ret;
-	e_lexeme	type;
+	e_lexeme		type;
 	int				i;
 	int				inc;
 
@@ -148,11 +176,23 @@ t_lexeme		*fuzzy_lexer(char *format)
 	while (*(format + i))
 	{
 		inc = 0;
-		if ((type = fuzzy_lexer_classify(format + i)) == DATATYPE)
+		if ((type = fuzzy_lexer_classify(format + i)) == DATATYPE || type == DOLLAR)
 		{
-			inc = fuzzy_find_eos(format + i + 1) + 1;
-			insert_lex(format, i + 1, inc, type, &ret);
+			inc = type == DOLLAR
+				? fuzzy_find_eon(format + i + 1) + 1
+				: fuzzy_find_eos(format + i + 1) + 1;
+			insert_lex(format, i + 1, i + inc, type == DOLLAR ? ARG_REF : type, &ret);
 			i += inc - 1;
+		}
+		else if (type == NONE)
+		{
+			while (type == NONE && *(format + i + inc))
+			{
+				inc++;
+				type = fuzzy_lexer_classify(format + i + inc);
+			}
+			insert_lex(format, i, i + inc, VARIABLE, &ret);
+			i += (inc - 1);
 		}
 		else
 			insert_lex(format, i, i + 1, type, &ret);
