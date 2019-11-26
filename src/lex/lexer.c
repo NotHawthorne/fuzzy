@@ -35,7 +35,7 @@ e_lexeme	fuzzy_lexer_classify(char *data)
 	e_lexeme	ret;
 
 	ret = NONE;
-	if (!((ret = fuzzy_lexer_singletons(*data)) == NONE))
+	if (!((ret = fuzzy_lexer_singletons(*data)) == NONE) && *(data + 1) != '=')
 		return (ret);
 	if (!strncmp(data, "%%", 2))
 		return (PERCENT);
@@ -75,6 +75,7 @@ t_lexeme		*new_lex(char *data, int start, int end, e_lexeme type)
 	new->data = data + start;
 	new->len = end - start;
 	new->type = type;
+	new->dec = 0;
 	return (new);
 }
 
@@ -195,7 +196,12 @@ t_lexeme		*fuzzy_lexer(char *format)
 			i += (inc - 1);
 		}
 		else
-			insert_lex(format, i, i + 1, type, &ret);
+		{
+			if (type == PERCENT || type == EQ || type == GREATEQ || type == LESSEQ)
+				inc++;
+			insert_lex(format, i, i + 1 + inc, type, &ret);
+			i += inc;
+		}
 		i++;
 	}
 	return (ret);

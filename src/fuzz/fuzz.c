@@ -11,10 +11,12 @@ void	*fuzz(void (*f)(void), const char *fmt, ...)
 int		main(int argc, char **argv)
 {
 	t_lexeme	*tmp;
+	t_lexeme	*x;
 
 	if (argc != 2)
 		return(printf("not enough args\n"));
 	tmp = fuzzy_lexer(argv[1]);
+	x = tmp;
 	while (tmp)
 	{
 		printf("[%.*s](", tmp->len, tmp->data);
@@ -22,4 +24,5 @@ int		main(int argc, char **argv)
 		printf(")\n");
 		tmp = tmp->next;
 	}
+	fuzzy_parser(x);
 }
