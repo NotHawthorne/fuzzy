@@ -8,19 +8,19 @@ void	*fuzz(void (*f)(void), const char *fmt, ...)
 
 	if (!f || !fmt)
 		return (NULL);
-	lexemes = fuzzy_lexer((char*)fmt);
-	ast = fuzzy_parser(lexemes);
 	va_start(vargs, fmt);
-	fuzzy_substitutions(ast, vargs);
+	lexemes = fuzzy_lexer((char*)fmt);
+	ast = fuzzy_parser(lexemes, vargs);
+	//fuzzy_substitutions(ast, vargs);
 	va_end(vargs);
-	printf("AFTER SUB\n");
+	//printf("AFTER SUB\n");
 	fuzzy_ast_print(ast);
 	return (NULL);
 }
 
 int		main(int argc, char **argv)
 {
-	if (argc != 2)
-		return(printf("not enough args\n"));
-	fuzz((void (*)(void))printf, argv[1], "TESTING");
+	if (argc == 1)
+		printf("not enough args\n");
+	fuzz((void (*)(void))printf, argv[1], argv[2], argv[3]);
 }

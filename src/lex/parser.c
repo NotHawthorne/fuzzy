@@ -1,5 +1,7 @@
 #include "fuzz.h"
 
+//#define LEX_DEBUG
+
 int			is_math_op(t_lexeme *lex)
 {
 	if (!lex)
@@ -311,7 +313,7 @@ e_ast_node	fuzzy_parser_classify(t_lexeme *lex)
 	return (EMPTY);
 }
 
-t_ast_node	*fuzzy_parser(t_lexeme *lex)
+t_ast_node	*fuzzy_parser(t_lexeme *lex, va_list list)
 {
 	t_lexeme	*tmp;
 	t_ast_node	*tree;
@@ -322,11 +324,17 @@ t_ast_node	*fuzzy_parser(t_lexeme *lex)
 	while (tmp)
 	{
 		type = fuzzy_parser_classify(tmp);
+
+		#ifdef LEX_DEBUG
 		printf("LEX: %.*s | CLASS: ", tmp->len, tmp->data);
 		fuzzy_parser_print_enum(type);
-		fuzzy_ast_insert(&tree, type, tmp);
+		#endif
+
+		fuzzy_ast_insert(&tree, type, tmp, list);
 		printf("\n");
 		tmp = tmp->next;
 	}
 	return (tree);
 }
+
+#undef LEX_DEBUG

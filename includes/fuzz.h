@@ -84,6 +84,15 @@ typedef enum
 	EMPTY
 } e_ast_node;
 
+typedef enum
+{
+	ERROR,
+	STR,
+	CHAR,
+	INT,
+	INT_ARR
+} e_datatype;
+
 typedef struct	s_lexeme		t_lexeme;
 typedef struct	s_ast_node		t_ast_node;
 typedef struct	s_arg			t_arg;
@@ -104,6 +113,7 @@ struct s_ast_node
 	e_ast_node			type;
 	struct s_ast_node	*parent;
 	struct s_ast_node	*children[MAX_AST_CHILDREN];
+	struct s_arg		*arg;
 };
 
 typedef union
@@ -117,12 +127,13 @@ typedef union
 struct s_arg
 {
 	u_arg			data;
+	e_datatype		type;
 	struct s_arg	*next;
 };
 
 struct s_constraint
 {
-	int				(*cmp)(void*, void*);
+	int				(*cmp)(t_arg*, t_arg*);
 	void			*cmp_against;
 	t_constraint	*next;
 };
@@ -130,8 +141,8 @@ struct s_constraint
 void		*fuzz(void (*f)(void), const char *fmt, ...);
 t_lexeme	*fuzzy_lexer(char *format);
 void		print_enum_type(t_lexeme *lexeme);
-t_ast_node	*fuzzy_parser(t_lexeme *lex);
-void		fuzzy_ast_insert(t_ast_node **head, e_ast_node type, t_lexeme *lex);
+t_ast_node	*fuzzy_parser(t_lexeme *lex, va_list list);
+void		fuzzy_ast_insert(t_ast_node **head, e_ast_node type, t_lexeme *lex, va_list list);
 void		fuzzy_ast_print(t_ast_node *head);
 int			fuzzy_substitutions(t_ast_node *head, va_list list);
 
