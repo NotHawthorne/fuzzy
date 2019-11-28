@@ -48,9 +48,9 @@ void	fuzzy_ast_insert(t_ast_node **head, e_ast_node type, t_lexeme *lex)
 		while (tmp->parent)
 			tmp = tmp->parent;
 		new = fuzzy_ast_new_node(lex, type, tmp);
-		*head = tmp;
+		*head = new;
 	}
-	else if (type == VAR)
+	else if (type == VAR || type == ARG_NO)
 	{
 		new = fuzzy_ast_new_node(lex, type, *head);
 		if (lex->next && lex->next->dec != MATH_OP)
@@ -60,6 +60,8 @@ void	fuzzy_ast_insert(t_ast_node **head, e_ast_node type, t_lexeme *lex)
 			*head = tmp;
 		}
 	}
+	else if (type == MATH_OP)
+		new = fuzzy_ast_new_node(lex, type, *head);
 	else
 	{
 		new = fuzzy_ast_new_node(lex, type, *head);

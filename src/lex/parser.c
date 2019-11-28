@@ -1,5 +1,20 @@
 #include "fuzz.h"
 
+int			is_math_op(t_lexeme *lex)
+{
+	if (!lex)
+		return (0);
+	if (lex->type == PLUS || lex->type == MINUS
+		|| lex->type == MULT || lex->type == DIV
+		|| lex->type == MOD)
+	{
+		if (lex->dec != MATH_OP)
+			lex->dec = MATH_OP;
+		return (1);
+	}
+	return (0);
+}
+
 int			is_sep(t_lexeme *lex)
 {
 	if (!lex)
@@ -43,6 +58,7 @@ int			is_arg_no(t_lexeme *lex)
 		return (0);
 	if (atoi(lex->data) && lex->type == ARG_REF)
 	{
+		is_math_op(lex->next);
 		if (lex->dec != ARG_NO)
 			lex->dec = ARG_NO;
 		return (1);
@@ -100,6 +116,7 @@ int			is_var(t_lexeme *lex)
 		return (0);
 	if (is_number(lex) || is_string(lex))
 	{
+		is_math_op(lex->next);
 		if (lex->dec != VAR)
 			lex->dec = VAR;
 		return (1);
@@ -217,21 +234,6 @@ int			is_expr(t_lexeme *lex)
 	return (0);
 }
 
-int			is_math_op(t_lexeme *lex)
-{
-	if (!lex)
-		return (0);
-	if (lex->type == PLUS || lex->type == MINUS
-		|| lex->type == MULT || lex->type == DIV
-		|| lex->type == MOD)
-	{
-		if (lex->dec != MATH_OP)
-			lex->dec = MATH_OP;
-		return (1);
-	}
-	return (0);
-}
-
 void		fuzzy_parser_print_enum(e_ast_node e)
 {
 	if (e == EXPR)
@@ -326,7 +328,5 @@ t_ast_node	*fuzzy_parser(t_lexeme *lex)
 		printf("\n");
 		tmp = tmp->next;
 	}
-	fuzzy_ast_print(tree);
-	printf("DONE\n");
-	return (NULL);
+	return (tree);
 }

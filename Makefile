@@ -3,7 +3,7 @@ CC := gcc
 
 all: $(NAME)
 
-MODULES := src/lex src/fuzz includes
+MODULES := src/lex src/fuzz src/exec includes
 LIBDIRS :=
 LIBS :=
 CFLAGS += -Iincludes -Wall -Werror -Wextra -g -fsanitize=address
