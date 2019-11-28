@@ -1,5 +1,20 @@
 #include "fuzz.h"
 
+int			is_math_op(t_lexeme *lex)
+{
+	if (!lex)
+		return (0);
+	if (lex->type == PLUS || lex->type == MINUS
+		|| lex->type == MULT || lex->type == DIV
+		|| lex->type == MOD)
+	{
+		if (lex->dec != MATH_OP)
+			lex->dec = MATH_OP;
+		return (1);
+	}
+	return (0);
+}
+
 int			is_sep(t_lexeme *lex)
 {
 	if (!lex)
@@ -100,6 +115,7 @@ int			is_var(t_lexeme *lex)
 		return (0);
 	if (is_number(lex) || is_string(lex))
 	{
+		is_math_op(lex->next);
 		if (lex->dec != VAR)
 			lex->dec = VAR;
 		return (1);
@@ -212,21 +228,6 @@ int			is_expr(t_lexeme *lex)
 	{
 		if (lex->dec != EXPR)
 			lex->dec = EXPR;
-		return (1);
-	}
-	return (0);
-}
-
-int			is_math_op(t_lexeme *lex)
-{
-	if (!lex)
-		return (0);
-	if (lex->type == PLUS || lex->type == MINUS
-		|| lex->type == MULT || lex->type == DIV
-		|| lex->type == MOD)
-	{
-		if (lex->dec != MATH_OP)
-			lex->dec = MATH_OP;
 		return (1);
 	}
 	return (0);

@@ -48,7 +48,7 @@ void	fuzzy_ast_insert(t_ast_node **head, e_ast_node type, t_lexeme *lex)
 		while (tmp->parent)
 			tmp = tmp->parent;
 		new = fuzzy_ast_new_node(lex, type, tmp);
-		*head = tmp;
+		*head = new;
 	}
 	else if (type == VAR)
 	{
