@@ -10,6 +10,7 @@
 # include <stdarg.h>
 
 # define MAX_AST_CHILDREN 10
+# define MAX_DEFAULT_RAND_STR_LEN 4096
 
 typedef enum
 {
@@ -134,7 +135,7 @@ struct s_arg
 struct s_constraint
 {
 	int				(*cmp)(t_arg*, t_arg*);
-	void			*cmp_against;
+	t_arg			*cmp_against;
 	t_constraint	*next;
 };
 
@@ -145,5 +146,9 @@ t_ast_node	*fuzzy_parser(t_lexeme *lex, va_list list);
 void		fuzzy_ast_insert(t_ast_node **head, e_ast_node type, t_lexeme *lex, va_list list);
 void		fuzzy_ast_print(t_ast_node *head);
 int			fuzzy_substitutions(t_ast_node *head, va_list list);
+int			fuzzy_traversal(t_ast_node *head);
+
+t_arg		*gen_str(t_constraint *constraints);
+t_arg		*gen_int(t_constraint *constraints);
 
 #endif
